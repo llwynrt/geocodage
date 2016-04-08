@@ -35,6 +35,12 @@ namespace Geocodage
          */
         public bool traiterFichier(string sFichier)
         {
+            FichierConfiguration conf = new FichierConfiguration();
+            conf.lecture();
+            separateur = conf.separateur;
+            adresse = conf.adresse;
+            codepostal = conf.codepostal;
+            suffixe = conf.suffixe;
             fichier = sFichier;
 
             //pas besoin de traiter le fichier s'il est vide ou contient juste la ligne d'entête
@@ -167,7 +173,7 @@ namespace Geocodage
          * lit des valeurs par défaut en cas d'erreur de lecture du fichier
          * @return true si la lecture a réussi et false si les valeurs par défaut sont utilisées
          */
-        public bool lectureFichierConfig()
+       /* public bool lectureFichierConfig()
         {
             try {
                 //récupère le premier caractère de la chaine separateur
@@ -185,6 +191,6 @@ namespace Geocodage
                 suffixe = "2";
                 return false;
             }
-        }
+        }*/
     }
 }

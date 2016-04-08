@@ -5,6 +5,8 @@ namespace Geocodage
 {
     public partial class Form1 : Form
     {
+        FichierConfiguration conf = new FichierConfiguration();
+
         TraitementDonnees traitement = new TraitementDonnees();
 
 
@@ -21,9 +23,12 @@ namespace Geocodage
                 }
             }
 
-            if (traitement.lectureFichierConfig()== false)
+            try {
+                conf.lecture();
+            }
+            catch(Exception)
             {
-                MessageBox.Show("erreur de lecture du fichier de configuraton\n"
+                MessageBox.Show("erreur de lecture du fichier de configuration\n"
                     +"Chargement des valeurs par défaut.");
             }
 
@@ -132,10 +137,6 @@ namespace Geocodage
         {
             Form2 fConfig = new Form2();
             fConfig.ShowDialog();
-            if (!traitement.lectureFichierConfig())
-            {
-                MessageBox.Show("Erreur de lecture du fichier de configuration.\nChargement des valeurs par défaut");
-            }
         }
     }
 }
