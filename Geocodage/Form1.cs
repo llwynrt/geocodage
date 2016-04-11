@@ -46,24 +46,24 @@ namespace Geocodage
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
                 e.Effect = DragDropEffects.Copy;
         }
-
         //quand un fichier est déposé dans la fenêtre
         void Form1_DragDrop(object sender, DragEventArgs e)
         {
             //liste des fichiers déposés
             string[] lFichiers = (string[])e.Data.GetData(DataFormats.FileDrop);
-
+            int erreur;
             foreach (string fichier in lFichiers)
             {
                 try
                 {
-                    if (traitement.traiterFichier(fichier))
+                    erreur = traitement.traiterFichier(fichier);
+                    if (erreur==0)
                     {
                         MessageBox.Show("fin du traitement de " + fichier);
                     }
                     else
                     {
-                        MessageBox.Show("erreur durant le traitement de " + fichier);
+                        messageErreur(erreur,fichier);
                     }
                 }
                 catch (Exception e2)
@@ -76,6 +76,38 @@ namespace Geocodage
             }
         }
 
+        private void messageErreur(int codeErreur, string fichier)
+        {
+            //todo : stocker les "lettres" dans un tableau pour pouvoir "inniber" certaines alertes
+            string code = Convert.ToString(-codeErreur, 2);
+            string message = "";
+            int lettre;
+
+            for (int i = 0; i < code.Length; i++)
+            {
+                Int32.TryParse(code.Substring(i, 1), out lettre);
+                if (lettre == 1)
+                {
+                    int puissance = (int)Math.Pow(2, code.Length - 1 - i);
+                    switch (puissance)
+                    {
+                        case 1: message += "Séparateur incorrect.\n";break;
+                        case 2: message += "Entête adresse incorrect.\n"; break;
+                        case 4: message += "Entête codepostal incorrect.\n"; break;
+                        case 8: message += "Fichier vide.\n"; break;
+                        case 16: message += "Fichier ne contient que l'entête.\n"; break;
+                        case 32: message += "Au moins une adresse impossible à géocoder.\n"; break;
+                        default:
+                            break;
+                    }
+                }
+            }
+            MessageBox.Show("erreur(s) durant le traitement de " + fichier);
+
+            MessageBox.Show(message);
+
+
+        }
         private void lancerTraitement()
         {
             int codePostal;
@@ -85,9 +117,9 @@ namespace Geocodage
                 try
                 {
                     traitement.traiterFormulaire(textBox1.Text, textBox2.Text);
-                    label1.Text = traitement.location.Latitude.ToString();
-                    label2.Text = traitement.location.Longitude.ToString();
-                    label3.Text = traitement.location.label;
+                    label1.Text = traitement.Latitude.ToString();
+                    label2.Text = traitement.Longitude.ToString();
+                    label3.Text = traitement.Label;
                 }
                 catch (Exception)
                 {
