@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Globalization;
 using System.IO;
 using System.Text;
@@ -9,13 +8,13 @@ namespace Geocodage
 {
     class TraitementDonnees
     {
+        private string fichier;
         private StreamReader sr;
         private List<string> lLignes;
-        private string fichier;
-        private Geoloc location;
         private Indice indice;
-        private int erreur=0;
         private FichierConfiguration conf;
+        private Geoloc location;
+        private int erreur;
 
         public double Latitude { get { return location.Latitude; } }
         public double Longitude { get { return location.Longitude; } }
@@ -34,7 +33,7 @@ namespace Geocodage
         /**
          * lit le fichier ligne par ligne et geocode chaque adresse dans le fichier
          * @param pFichier : le fichier à traiter
-         * todo : renvoyer un code d'erreur personnalisé
+         * return code d'erreur
          */
         public int traiterFichier(string sFichier)
         {
@@ -43,16 +42,12 @@ namespace Geocodage
             erreur = 0;
 
             fichier = sFichier;
-            erreur=lectureFichier();
-            int nombreLignes= lLignes.Count;
+            lectureFichier();
             
-            //pas besoin de traiter le fichier s'il est vide ou contient juste la ligne d'entête
-            if (erreur == 0 && nombreLignes > 1)
+            //on écrit le fichier s'il n'y a pas d'erreur de mise en forme
+            if (erreur == 0 || erreur == 32)
             {
                 ecritureFichier();
-            }
-            else
-            {
             }
             return erreur;
         }
@@ -61,31 +56,29 @@ namespace Geocodage
          * lit le fichier ligne par ligne
          * en premier l'entête pour connaitre les champs à utiliser
          * ensuite les lignes qui sont stockées dans une liste de string
-         * @return true si tout c'est bien passé, false si impossible de trouver les champs adresse ou codepostal dans l'entête
-         * todo : retourner un code d'erreur personnalisé
+         * @return code d'erreur : 0 si ok, nombre négatif sinon
          */
-        private int lectureFichier()
+        private void lectureFichier()
         {
             lLignes = new List<string>();
 
             using (sr = new StreamReader(fichier, Encoding.GetEncoding("utf-8")))
             {
                 lireEntete();
-                string code = Convert.ToString(-erreur, 2);
-                code=code.PadLeft(6, '0');
+                /*string code = Convert.ToString(-erreur, 2);
+                code=code.PadLeft(6, '0');*/
 
-                if (code.Substring(2,4)=="0000")
+                if (erreur==0)
                 {
                     lireDonnees();
                 }
             }
-            return erreur;
         }
 
         /**
          * lit la premiere ligne du fichier et récupère l'indice des champs adresse et code postal
-         * todo : lire l'entête et permettre de choisir les colonnes à utiliser
          * return un objet indice contenant les indices de adresse et codepostal
+         * todo : lire l'entête et permettre de choisir les colonnes à utiliser
          */
         private void lireEntete()
         {

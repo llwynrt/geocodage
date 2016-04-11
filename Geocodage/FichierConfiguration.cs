@@ -2,7 +2,6 @@
 
 namespace Geocodage
 {
-
     class FichierConfiguration
     {
         //valeurs par défaut

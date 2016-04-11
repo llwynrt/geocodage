@@ -12,8 +12,7 @@ namespace Geocodage
             InitializeComponent();
             AcceptButton = button1;
             try {
-                conf.lecture();
-                
+                conf.lecture(); 
             }
             catch (Exception)
             {

@@ -46,6 +46,7 @@ namespace Geocodage
             if (e.Data.GetDataPresent(DataFormats.FileDrop))
                 e.Effect = DragDropEffects.Copy;
         }
+
         //quand un fichier est déposé dans la fenêtre
         void Form1_DragDrop(object sender, DragEventArgs e)
         {
@@ -68,7 +69,6 @@ namespace Geocodage
                 }
                 catch (Exception e2)
                 {
-                    // Let the user know what went wrong.
                     // à supprimer ??
                     MessageBox.Show("Erreur avec le fichier "+ fichier);
                     MessageBox.Show(e2.Message);
@@ -78,7 +78,6 @@ namespace Geocodage
 
         private void messageErreur(int codeErreur, string fichier)
         {
-            //todo : stocker les "lettres" dans un tableau pour pouvoir "inniber" certaines alertes
             string code = Convert.ToString(-codeErreur, 2);
             string message = "";
             int lettre;
@@ -105,15 +104,22 @@ namespace Geocodage
             MessageBox.Show("erreur(s) durant le traitement de " + fichier);
 
             MessageBox.Show(message);
-
-
         }
+
         private void lancerTraitement()
         {
             int codePostal;
             //vérification ddes champs
-            if (textBox1.Text != "" && textBox2.Text != "" && Int32.TryParse(textBox2.Text, out codePostal))
+
+            if( (textBox1.Text == "") || (textBox2.Text == ""))
             {
+                MessageBox.Show("L'un des champs est vide !");
+            }
+            else if (!Int32.TryParse(textBox2.Text, out codePostal))
+            {
+                MessageBox.Show("Le champs code postal est incorrect !");
+            }
+            else {
                 try
                 {
                     traitement.traiterFormulaire(textBox1.Text, textBox2.Text);
@@ -124,21 +130,6 @@ namespace Geocodage
                 catch (Exception)
                 {
                     MessageBox.Show("Impossible de géocoder l'adresse. Un des champs doit être incorrect !");
-                }
-            }
-            else
-            {
-                if (textBox1.Text == "")
-                {
-                    MessageBox.Show("Le champs adresse est vide !");
-                }
-                if (textBox2.Text == "")
-                {
-                    MessageBox.Show("Le champs code postal est vide !");
-                }
-                else if (!Int32.TryParse(textBox2.Text, out codePostal))
-                {
-                    MessageBox.Show("Le champs code postal est incorrect !");
                 }
             }
         }
