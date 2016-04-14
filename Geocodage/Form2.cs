@@ -30,7 +30,11 @@ namespace Geocodage
 
         private void button1_Click(object sender, EventArgs e)
         {
-            conf.ecriture(textBox1.Text.ToCharArray(0,1)[0], textBox2.Text, textBox3.Text, textBox4.Text);
+            conf.separateur = textBox1.Text.ToCharArray(0, 1)[0];
+            conf.adresse = textBox2.Text;
+            conf.codepostal = textBox3.Text;
+            conf.suffixe = textBox4.Text;
+            conf.ecriture();
             Close();
         }
     }

@@ -28,13 +28,8 @@ namespace Geocodage
             suffixe = ConfigurationManager.AppSettings["suffixe"];
         }
 
-        public void ecriture(char separateur, string adresse, string codepostal, string suffixe)
+        public void ecriture()
         {
-            this.separateur = separateur;
-            this.adresse = adresse;
-            this.codepostal = codepostal;
-            this.suffixe = suffixe;
-
             Configuration config = ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None);
 
             config.AppSettings.Settings.Remove("separateur");

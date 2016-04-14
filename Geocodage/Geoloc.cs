@@ -6,6 +6,7 @@ namespace Geocodage
 {
     public class Geoloc
     {
+        //todo : faire une interface IGeoloc pour permettre d'utiliser facilement une autre api 
         Json json = new Json();
         string texte;
         Reponse m;

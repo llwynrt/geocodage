@@ -30,6 +30,7 @@ namespace Geocodage
             {
                 MessageBox.Show("erreur de lecture du fichier de configuration\n"
                     +"Chargement des valeurs par défaut.");
+                conf.ecriture();
             }
 
             //autorise le drag and drop
